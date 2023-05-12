@@ -33,8 +33,8 @@
     .global     __tx_SysTickHandler                 // SysTick
     .global     __tx_IntHandler                     // Int 0
 
-SYSTEM_CLOCK      =   6000000
-SYSTICK_CYCLES    =   ((SYSTEM_CLOCK / 100) -1)
+SYSTEM_CLOCK      =   300000000
+SYSTICK_CYCLES    =   ((SYSTEM_CLOCK)/100 -1)       // configure systick count to be equivalent to 10ms
 
     .text 32
     .align 4
@@ -99,14 +99,9 @@ _tx_initialize_low_level:
     ADD     r1, r1, #4                              //
     STR     r1, [r0]                                // Setup first unused memory pointer
 
-    /* Setup Vector Table Offset Register.  */
-    MOV     r0, #0xE000E000                         // Build address of NVIC registers
-    LDR     r1, =_vectors                           // Pickup address of vector table
-    STR     r1, [r0, #0xD08]                        // Set vector table address
-
     /* Set system stack pointer from vector value.  */
     LDR     r0, =_tx_thread_system_stack_ptr        // Build address of system stack pointer
-    LDR     r1, =_vectors                           // Pickup address of vector table
+    LDR     r1, =exception_table                    // Pickup address of vector table
     LDR     r1, [r1]                                // Pickup reset stack pointer
     STR     r1, [r0]                                // Save system stack pointer
 

@@ -47,25 +47,28 @@
 #include "lwip_macif_config.h"
 #include <string.h>
 
+#include "tx_api.h"
+#include "tx_port.h"
+
 /* Saved total time in mS since timer was enabled */
 volatile static u32_t systick_timems;
-volatile static bool  recv_flag = false;
-static bool           link_up   = false;
+volatile static bool recv_flag = false;
+static bool link_up = false;
 
 u32_t sys_now(void)
 {
 	return systick_timems;
 }
 
-void SysTick_Handler(void)
-{
-	systick_timems++;
-}
+// void SysTick_Handler(void)
+// {
+// 	systick_timems++;
+// }
 
 void systick_enable(void)
 {
 	systick_timems = 0;
-	SysTick_Config((CONF_CPU_FREQUENCY) / 1000);
+	SysTick_Config((CONF_CPU_FREQUENCY) / 1);
 }
 
 void mac_receive_cb(struct mac_async_descriptor *desc)
@@ -98,22 +101,29 @@ static void read_macaddress(u8_t *mac)
 int main(void)
 {
 	int32_t ret;
-	u8_t    mac[6];
+	u8_t mac[6];
 
 	atmel_start_init();
 
 	/* Read MacAddress from EEPROM */
 	read_macaddress(mac);
 
-	systick_enable();
+	// systick_enable();
 
 	printf("\r\nHello ATMEL World!\r\n");
+
+	printf("\r\nStarting ThreadX kernel.");
+
+	tx_kernel_enter();
+
 	mac_async_register_callback(&MACIF, MAC_ASYNC_RECEIVE_CB, (FUNC_PTR)mac_receive_cb);
 
 	eth_ipstack_init();
-	do {
+	do
+	{
 		ret = ethernet_phy_get_link_status(&MACIF_PHY_desc, &link_up);
-		if (ret == ERR_NONE && link_up) {
+		if (ret == ERR_NONE && link_up)
+		{
 			break;
 		}
 	} while (true);
@@ -130,8 +140,10 @@ int main(void)
 
 	mac_async_enable(&MACIF);
 
-	while (true) {
-		if (recv_flag) {
+	while (true)
+	{
+		if (recv_flag)
+		{
 			recv_flag = false;
 			ethernetif_mac_input(&LWIP_MACIF_desc);
 		}

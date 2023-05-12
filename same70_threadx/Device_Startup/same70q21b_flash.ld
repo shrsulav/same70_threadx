@@ -156,5 +156,6 @@ SECTIONS
 
     . = ALIGN(4);
     _end = . ;
+    __RAM_segment_used_end__ = .;
     _ram_end_ = ORIGIN(ram) + LENGTH(ram) - 1 ;
 }
