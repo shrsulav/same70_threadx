@@ -4,7 +4,8 @@
  * Created: 12-May-23 11:35:42 AM
  *  Author: heisenberg
  */
-
+#include <atmel_start.h>
+#include <hal_gpio.h>
 #include "tx_api.h"
 #include "tx_port.h"
 
@@ -30,7 +31,9 @@ void my_thread_entry(ULONG thread_input)
         /* Increment thread counter. */
         thread_counter++;
 
-        tx_thread_sleep(500);   // corresponding to 5s
+        gpio_toggle_pin_level(LED0);
+
+        tx_thread_sleep(500); // corresponding to 5s
 
         /* Release the semaphore. */
         status = tx_semaphore_put(&semaphore_1);
@@ -59,7 +62,9 @@ void my_thread_entry_2(ULONG thread_input)
         /* Increment thread counter. */
         thread_counter++;
 
-        tx_thread_sleep(500);   // corresponding to 5s
+        gpio_toggle_pin_level(LED0);
+
+        tx_thread_sleep(500); // corresponding to 5s
 
         /* Release the semaphore. */
         status = tx_semaphore_put(&semaphore_0);

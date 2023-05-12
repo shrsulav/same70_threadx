@@ -821,6 +821,13 @@ pads:
     mode: Peripheral IO
     user_label: PA4
     configuration: {}
+  LED0:
+    name: PC8
+    definition: Atmel:SAME70B_Drivers:0.0.1::ATSAME70Q21B-AN::pad::PC8
+    mode: Digital output
+    user_label: LED0
+    configuration:
+      pad_initial_level: High
   PHY_RESET_PIN:
     name: PC10
     definition: Atmel:SAME70B_Drivers:0.0.1::ATSAME70Q21B-AN::pad::PC10

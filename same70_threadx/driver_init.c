@@ -106,6 +106,20 @@ void system_init(void)
 	/* Disable Watchdog */
 	hri_wdt_set_MR_WDDIS_bit(WDT);
 
+	/* GPIO on PC8 */
+
+	gpio_set_pin_level(LED0,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   true);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(LED0, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(LED0, GPIO_PIN_FUNCTION_OFF);
+
 	/* GPIO on PC10 */
 
 	gpio_set_pin_level(PHY_RESET_PIN,
